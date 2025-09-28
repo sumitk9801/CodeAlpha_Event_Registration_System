@@ -1,11 +1,11 @@
 import express from 'express';
-import cors from 'cors';
+import connectDB from "./DB/connectDb.js"
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import eventRoutes from './routes/events.js';
-import userRoutes from './routes/users.js';
-import registrationRoutes from './routes/registrations.js';
+// import eventRoutes from './routes/events.js';
+import userRouter from './Routers/userRoute.js';
+// import registrationRoutes from './routes/registrations.js';
 
 dotenv.config();
 const app = express();
@@ -13,20 +13,19 @@ const PORT = process.env.PORT ;
 const MONGO_URI = process.env.MONGO_URI ;
 
 // Middleware
-app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
-app.use('/api/events', eventRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/registrations', registrationRoutes);
+// app.use('/api/events', eventRoutes);
+app.use('/api/users', userRouter);
+// app.use('/api/registrations', registrationRoutes);
 
 // Connect to MongoDB
-// connectDB()
-// .then(()=>{
-//     console.log("database has been connected");
-// })
+connectDB()
+.then(()=>{
+    console.log("database has been connected");
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
