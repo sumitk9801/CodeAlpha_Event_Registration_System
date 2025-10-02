@@ -3,7 +3,7 @@ import connectDB from "./DB/connectDb.js"
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-// import eventRoutes from './routes/events.js';
+import eventRouter from './Routers/eventRoute.js';
 import userRouter from './Routers/userRoute.js';
 // import registrationRoutes from './routes/registrations.js';
 
@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
-// app.use('/api/events', eventRoutes);
+app.use('/api/events', eventRouter);
 app.use('/api/users', userRouter);
 // app.use('/api/registrations', registrationRoutes);
 

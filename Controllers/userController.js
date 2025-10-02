@@ -3,8 +3,8 @@ import bcrypt from "bcrypt"
 const registerUser = async(req,res)=>{    
   const {name,email,password,phone} = req.body;
     try{
-    const existingUser = User.findOne({email});
-    console.log(existingUser.data);
+    const existingUser = await User.findOne({email});
+    console.log(existingUser);
     if(existingUser){
         return res.status(400).json({message:"User Already exist"});
     } 
@@ -29,13 +29,13 @@ const loginUser = async(req,res)=>{
   const {email,password}=req.body;
 
   try{
-    const user =  User.findOne({email});
-    if(!user){return res.json({success:false,message:"Register the User"});}
+    const user = await User.findOne({email});
+    if(!user){return res.json({success:false,message:"User not found"});}
 
     const isMatch = await bcrypt.compare(password,user.password);
     if(!isMatch) return res.json({success:false,message:"Invalid email or password"});
 
-    return res.json({success:true,message:"Login succesful" , user:user.password});
+    return res.json({success:true,message:"Login succesful"});
 
   }catch(error){
     console.log("error");

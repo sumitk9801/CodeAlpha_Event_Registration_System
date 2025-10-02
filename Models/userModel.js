@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
         type:Number,
         required:true
     },
+    password:{
+        type:String,
+        required:true
+    },
     role: { type: String, enum: ["user", "organizer", "admin"], default: "user" },
     isVerified: { type: Boolean, default: false },
     registeredEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }]
