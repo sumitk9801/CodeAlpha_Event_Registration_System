@@ -1,7 +1,7 @@
 import express from "express"
 import {User} from "../Models/userModel.js"
 import bcrpt from "bcrypt"
-import { registerUser,loginUser,getAllUser } from "../Controllers/userController.js";
+import { registerUser,loginUser,getAllUser ,deleteUser} from "../Controllers/userController.js";
 
 
 const router = express.Router();
@@ -9,5 +9,6 @@ const router = express.Router();
 router.post("/register",registerUser);
 router.post("/login",loginUser);
 router.get("/",getAllUser);
+router.post("/delete",deleteUser);
 
 export default router;

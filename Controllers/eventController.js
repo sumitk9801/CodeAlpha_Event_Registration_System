@@ -12,12 +12,13 @@ const registerEvent = async(req,res) =>{
 
         if(event) return res.status(400).json({message:"Event already registered"});
 
-        const newEvent = Event.create({
+        const newEvent = new Event.create({
             title,
             description,
             date,
             time,
             location,
+            organizerId,
             capacity
         });
         await newEvent.save();
@@ -29,5 +30,46 @@ const registerEvent = async(req,res) =>{
         console.log("Event registration Error");
         res.json({status:false,message:error.message})
     }
-} 
-export {registerEvent};
+}
+const getEventStatus=(event)=>{
+    const eventDateTime = new Date(`${event.date}T${event.time}`);
+    const now = new Date();
+
+    if(now<eventDateTime) return "upcoming";
+    if(now.toDateString()===eventDateTime.toDateString()) return "ongoing";
+    return "completed";
+
+}
+const showAllEvents = async(req,res)=>{
+        try{
+
+            const events = await Event.find({});
+            if(!events) return res.json({success:true,message:"No events are registered"});
+            
+            const eventsWithStatus = events.map(event=>({
+                ...event.toObject(),
+                status:getEventStatus(event)
+            }));
+            return res.json({
+                success:true,
+                data:events,
+            })
+        }catch(error){
+            console.log("cant get the users error");
+            return res.json({success:false,message:error.message});
+        }
+}
+const deleteEvent =async(req,res)=>{
+    try {
+        const event = await Event.findOneAndDelete({title:req.body.title});
+
+        if(!event) return res.json({success:true,message:"No event found"});
+
+        return res.json({message:"Deleted Successful"});
+    } catch (error) {
+        return res.json({success:false,message:error.message});
+    }
+}
+
+
+export {registerEvent,showAllEvents,deleteEvent};
