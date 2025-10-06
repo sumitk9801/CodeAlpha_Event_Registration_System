@@ -70,7 +70,6 @@ const getAllUser = async(req,res)=>{
     
     if(!users || users.length==0) return res.json({message:"No user Found"});
 
-    console.log(users)
     
     return res.json({
       success:true,

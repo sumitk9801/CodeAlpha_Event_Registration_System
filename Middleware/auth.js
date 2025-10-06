@@ -11,16 +11,13 @@ const auth = async(req,res,next)=>{ //token check
         next();
     }
     catch(error){
-        console.log("auth error");
-        res.json({message:error.message});
+        
+        res.json({success:false,message:error.message});
     }
 
 }
 const authorizedRole =(...allowedRoles)=>(req,res,next)=>{
     try{
-        console.log(allowedRoles);
-        console.log(req.user);
-
         if (!allowedRoles.includes(req.user.role)) {
           return res.status(403).json({ message: "Access denied" });
         }
@@ -30,5 +27,4 @@ const authorizedRole =(...allowedRoles)=>(req,res,next)=>{
 
     }
 }
-
 export  {auth,authorizedRole};

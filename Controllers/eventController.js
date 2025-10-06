@@ -12,7 +12,7 @@ const registerEvent = async(req,res) =>{
 
         if(event) return res.status(400).json({message:"Event already registered"});
 
-        const newEvent = new Event.create({
+        const newEvent = new Event({
             title,
             description,
             date,

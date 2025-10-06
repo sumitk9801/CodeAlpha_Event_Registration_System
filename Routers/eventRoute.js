@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/register",auth,authorizedRole("organizer","admin"),registerEvent);
 router.post("/delete",auth,authorizedRole("organizer","admin"),deleteEvent);
-router.get("/",auth,authorizedRole("admin"),showAllEvents);
+router.get("/",auth,showAllEvents);
 
 
 export default router;

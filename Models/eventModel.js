@@ -14,7 +14,7 @@ const eventSchema = new mongoose.Schema({
         default: "upcoming" 
     },
     organizerId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    registrations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Registration" }]
+    registrations: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
 })
 
 export const Event = mongoose.model("Event",eventSchema); 
