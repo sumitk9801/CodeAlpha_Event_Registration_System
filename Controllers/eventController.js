@@ -6,7 +6,6 @@ const registerEvent = async(req,res) =>{
         const {title,description,date,time,location,capacity} = req.body;
 
         const organizerId = req.user.id;
-        console.log(organizerId);
 
         const event = await Event.findOne({title,organizerId});
 
@@ -30,7 +29,9 @@ const registerEvent = async(req,res) =>{
         console.log("Event registration Error");
         res.json({status:false,message:error.message})
     }
-}
+};
+
+
 const getEventStatus=(event)=>{
     const eventDateTime = new Date(`${event.date}T${event.time}`);
     const now = new Date();
@@ -39,10 +40,11 @@ const getEventStatus=(event)=>{
     if(now.toDateString()===eventDateTime.toDateString()) return "ongoing";
     return "completed";
 
-}
+};
+
+
 const showAllEvents = async(req,res)=>{
         try{
-
             const events = await Event.find({});
             if(!events) return res.json({success:true,message:"No events are registered"});
             
@@ -58,7 +60,9 @@ const showAllEvents = async(req,res)=>{
             console.log("cant get the users error");
             return res.json({success:false,message:error.message});
         }
-}
+};
+
+
 const deleteEvent =async(req,res)=>{
     try {
         const event = await Event.findOneAndDelete({title:req.body.title});

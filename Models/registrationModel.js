@@ -6,7 +6,7 @@ const regisrationSchema = new mongoose.Schema({
   registrationDate: { type: Date, default: Date.now },
   status: { type: String, enum: ["pending", "confirmed", "cancelled"], default: "confirmed" },
   paymentStatus: { type: String, enum: ["unpaid", "paid", "refunded"], default: "unpaid" },
-  ticketId: { type: String }  
+
 });
 
 export const Registration = mongoose.model("Registration", regisrationSchema);

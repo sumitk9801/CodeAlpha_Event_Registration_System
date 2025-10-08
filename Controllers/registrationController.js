@@ -1,11 +1,7 @@
 import {User} from "../Models/userModel.js"
 import {Event} from "../Models/eventModel.js"
 import {Registration} from "../Models/registrationModel.js";
-import { v4 as uuidv4 } from "uuid";
 
-const generateTicketId = () => {
-  return "TICKET-" + uuidv4().slice(0, 8).toUpperCase();
-};
 
 const userEventRegister = async (req, res) => {
   try {
@@ -27,12 +23,11 @@ const userEventRegister = async (req, res) => {
     if (event.registrations.includes(userId)) {
       return res.status(400).json({ message: "Event already has this user registered" });
     }
-    const ticket=  generateTicketId();
+
 
     const newRegister = await Registration.create({
       UserId:userId,
-      eventId:eventId,
-      ticketId: ticket
+      eventId
     })
 
     user.registeredEvents.push(eventId);
@@ -46,13 +41,15 @@ const userEventRegister = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "User registered for event successfully",
-      data: { user, event ,registration: newRegister}
+      data: {ticktId:newRegister._id}
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+
 const allEnrolledUsers=async(req,res)=>{
   const eventId=req.params.eventId;
 
@@ -67,10 +64,12 @@ const allEnrolledUsers=async(req,res)=>{
     return res.json({success:false,message:error.message});
   }
 };
+
+
 const removeUser=async(req,res)=>{
   try {
-    const userId = req.params.userId;  // e.g. /unregister/:userId
-    const eventId = req.body.id;       // e.g. { "id": "eventIdHere" }
+    const userId = req.params.userId;  
+    const eventId = req.body.id;   
 
     const user = await User.findById(userId);
     const event = await Event.findById(eventId);
@@ -97,9 +96,36 @@ const removeUser=async(req,res)=>{
       message: "User successfully unregistered from event",
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Server error", error: error.message });
+   
+    return res.status(500).json({ success: false, message: "Server error", error: error.message });
   }
-}
+};
 
-export {userEventRegister,allEnrolledUsers,removeUser};
+
+
+const isEnrolled = async (req, res) => {
+  try {
+    const {ticketId} = req.body;
+    if(!ticketId)return res.status(404).json({success:false,message:"Ticket is not provided."});
+
+    const ticket = await Registration.findOne({_id:ticketId}).populate("eventId","title");
+
+    if (!ticket) {
+      return res.status(404).json({ success: false, message: "Ticket not found." });
+    }
+
+    if (!ticket.eventId) {
+      return res.status(404).json({ success: false, message: "Event not found for this ticket." });
+    }
+
+    const eventTitle = ticket.eventId.title;
+
+    return res.status(200).json({ success: true, data: eventTitle });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+export {userEventRegister,allEnrolledUsers,removeUser,isEnrolled};

@@ -69,7 +69,6 @@ const getAllUser = async(req,res)=>{
     const users =  await User.find({});
     
     if(!users || users.length==0) return res.json({message:"No user Found"});
-
     
     return res.json({
       success:true,
@@ -84,7 +83,6 @@ const getAllUser = async(req,res)=>{
 // deleting the user
 const deleteUser = async(req,res)=>{
   try{
-
     const user  =  await User.findOneAndDelete({email:req.body.email});
     if(!user) return res.json({success:false,message:"NO SUCH USER EXIST"});
     return res.json({success:true,message:"user is removed "});
